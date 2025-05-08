@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="Fir.dto">
+    <class name="Lockup" table="Lockuptable">
+        <id name="lockupNo" column="lockupNO"/>
+        <property name="accusedName" column="accusedName"/>
+        <property name="crime" column="crime"/>
+        <property name="image" column="image"/>
+     
+        <property name="contact" column="contact"/>
+
+       
+    </class>
+</hibernate-mapping>

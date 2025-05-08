@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="Fir.dto">
+    <class name="FIR" table="firtable">
+        <id name="applicationNo" column="applicationNo"/>
+        <property name="dateOfRegistration" column="dateOfRegistration"/>
+        <property name="nameOfComplainant" column="nameOfComplainant"/>
+        <property name="complain" column="complain"/>
+        <property name="nameOfAccused" column="nameOfAccused"/>
+        <property name="address" column="address"/>
+        <property name="contact" column="contact"/>
+
+       
+    </class>
+</hibernate-mapping>
