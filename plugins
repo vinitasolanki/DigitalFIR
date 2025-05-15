@@ -1,0 +1,281 @@
+LIVESTROM -
+
+Create Event - 
+Action-
+
+try{
+
+let data = {
+  "data": {
+    "type": "events",  
+    "attributes": {
+      "title": context.inputData.title,  // Event Title
+      "owner_id": context.inputData.owner_id,  // ID of the event owner (Host)
+      "description": `<h1>${context.inputData?.description}</h1>`,  // Event Description
+      "slug": context.inputData.slug,  // Event Slug (URL-friendly)
+      "status":context.inputData?.status,
+      "everyone_can_speak": context.inputData.everyone_can_speak,  // Whether everyone invited can speak
+      "registration_page_enabled": context.inputData.detailed_registration_page_enabled,  // Enable detailed registration page
+      "light_registration_page_enabled": context.inputData.light_registration_page_enabled,  // Enable light registration page
+      "recording_enabled": context.inputData.recording_enabled,  // Enable recording
+      "recording_public": context.inputData.recording_public,  // Make the recording public
+      "show_in_company_page": context.inputData.show_in_company_page,  // Show event on the company page
+      "chat_enabled": context.inputData.chat_enabled,  // Enable chat tab during event
+      "questions_enabled": context.inputData.questions_enabled,  // Enable questions tab during event
+      "polls_enabled": context.inputData.polls_enabled  // Enable polls tab during event
+    },
+    "relationships": {
+      "sessions": {
+        "data": [
+          {
+            "type": "sessions",  
+            "attributes": {
+              "estimated_started_at": context.inputData.estimated_started_at, 
+              "timezone": context.inputData.timezone 
+            }
+          }
+        ]
+      }
+    }
+  }
+
+};
+
+let config = {
+  method: 'post',
+  maxBodyLength: Infinity,
+  url: 'https://api.livestorm.co/v1/events',
+  data : data
+};
+
+const res = await axios.request(config) 
+return res.data
+}catch(error){
+    throw error
+}
+
+
+JSON Builder-
+
+
+[
+  {
+    "key": "title",
+    "help": "Enter the title for your event.",
+    "type": "string",
+    "label": "Title",
+    "required": true,
+    "placeholder": "E.g., My Awesome Webinar"
+  },
+  {
+    "key": "owner_id",
+    "help": "Select or Enter the owner Id for this event",
+    "type": "dropdown",
+    "label": "Owner",
+    "required": true,
+    "optionsGenerator": "async function getEventOwners() {\r\n  try {\r\n    const response = await axios.get(\r\n      \"https://api.livestorm.co/v1/users\"\r\n    );\r\n\r\n    if (response.data.data && response.data.data.length > 0) {\r\n      // Map through the response data and format it\r\n      return response.data.data.map(member => ({\r\n        label: member.attributes.email,  // Display email as label\r\n        value: member.id,                // Use user ID as the value\r\n        sample: member.id // Also use email as a sample\r\n      }));\r\n    } else {\r\n      // If no data is found, return a custom message\r\n      return { message: \"No owners found. Ensure data is available to fetch.\" };\r\n    }\r\n  } catch (error) {\r\n    throw error;\r\n  }\r\n}\r\n\r\n// Call the function and wait for the response\r\nreturn await getEventOwners();\r\n"
+  },
+  {
+    "key": "status",
+    "help": "Select or Enter the status of the event.",
+    "type": "dropdown",
+    "label": "Status",
+    "options": [
+      {
+        "label": "Draft",
+        "value": "draft"
+      },
+      {
+        "label": "Published",
+        "value": "published"
+      }
+    ],
+    "required": false
+  },
+  {
+    "key": "slug",
+    "help": "Enter a URL-friendly version of the title. If not provided, it will be automatically generated.",
+    "type": "string",
+    "label": "Slug",
+    "required": false,
+    "placeholder": "E.g., my-awesome-webinar"
+  },
+  {
+    "key": "description",
+    "help": "Enter a description for your event.",
+    "type": "html",
+    "label": "Description",
+    "required": false,
+    "placeholder": "E.g., This webinar will cover..."
+  },
+  {
+    "key": "estimated_started_at",
+    "help": "Enter the Date & Time of the first session in YYYY-MM-DD HH:MM:SS.",
+    "type": "date",
+    "label": "First Session Date & Time",
+    "required": false,
+    "placeholder": "E.g., 2024-02-20 15:30"
+  },
+  {
+    "key": "timezone",
+    "help": "Enter the timezone for the first session. You can find a list of available timezones here: [Timezone List](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).",
+    "type": "string",
+    "label": "First Session Timezone",
+    "required": false,
+    "placeholder": "E.g., Europe/Paris"
+  },
+  {
+    "key": "show_in_company_page",
+    "help": "Enable this to display the event on your company page.",
+    "type": "boolean",
+    "label": "Shown in Company Page?",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false
+  },
+  {
+    "key": "everyone_can_speak",
+    "help": "Select whether everyone can speak during the event.",
+    "type": "boolean",
+    "label": "Speaking Permission",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false
+  },
+  {
+    "key": "registration_page_enabled",
+    "help": "Chose whether to enable the detailed registration page.",
+    "type": "boolean",
+    "label": "Enable detailed registration page? ",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false
+  },
+  {
+    "key": "light_registration_page_enabled",
+    "help": "Chose whether to enable light registration page.",
+    "type": "boolean",
+    "label": "Enable light registration page? ",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false
+  },
+  {
+    "key": "recording_enabled",
+    "help": "Chose whether to allow event recording.",
+    "type": "boolean",
+    "label": "Recording Enabled?",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false,
+    "customInputLabel": "Enter Identifier"
+  },
+  {
+    "key": "recording_public",
+    "help": "Chose whether to make the recording publicly available.",
+    "type": "boolean",
+    "label": "Recording Public?",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false
+  },
+  {
+    "key": "chat_enabled",
+    "help": "Chose whether to allow chat in the event.",
+    "type": "boolean",
+    "label": "Chat Tab Enabled?",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false
+  },
+  {
+    "key": "questions_enabled",
+    "help": "Chose whether to allow participants to ask questions.",
+    "type": "boolean",
+    "label": "Questions Tab Enabled?",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false
+  },
+  {
+    "key": "polls_enabled",
+    "help": "Chose whether to allow polls in the event.",
+    "type": "boolean",
+    "label": "Polls Tab Enabled?",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "required": false
+  }
+]
